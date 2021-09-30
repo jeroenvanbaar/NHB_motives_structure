@@ -1,0 +1,51 @@
+---
+title: "LME regression to predict looking times on S (dur_pct) onto within-subjects factors 'mini-block' and 'player_type' and between-subjects factor 'Risk'"
+output: html_notebook
+---
+```{r}
+require(lme4)
+require(lmerTest)
+```
+
+```{r}
+base_dir <- '~/Dropbox (Brown)/Postdoc FHL/JEROEN/SOC_STRUCT_LEARN'
+filename <- paste(base_dir, '/Study2_EyeTracking/Data/Cleaned/LMER_dat/LMER_dat_LT-diff_onto_mini-block_player-type_Risk.csv', sep = '')
+LMER_dat <- read.csv(filename)
+
+
+
+# anova_dat = subset(anova_dat, anova_dat$nDim < 4)
+# anova_dat = subset(anova_dat, anova_dat$Type_Total == "opt_nat" | anova_dat$Type_Total == "pess_nat")
+
+LMER_dat$player_type = as.factor(LMER_dat$player_type)
+LMER_dat$player_type = relevel(LMER_dat$player_type, ref = 'opt_nat')
+LMER_dat$Risk = as.factor(LMER_dat$Risk)
+LMER_dat$Risk = relevel(LMER_dat$Risk, ref = 'False')
+# LMER_dat$mini_block = as.factor(LMER_dat$mini_block)
+# LMER_dat$mini_block = relevel(LMER_dat$mini_block, ref = 1)
+
+model = lmer(data = LMER_dat, formula = 'S.T ~ mini_block*player_type*Risk + (1 | sub)')
+anova(model)
+summary(model)
+
+```
+```{r}
+# Average over mini-block
+
+LMER_dat_
+model = lmer(data = LMER_dat, formula = 'S.T ~ mini_block*player_type*Risk + (1 | sub)')
+anova(model)
+summary(model)
+
+```
+
+```{r}
+# Looking time by player type and mini-block
+
+model = lmer(data = LMER_dat, formula = 'S.T ~ mini_block*player_type + (1 + player_type | sub)')
+anova(model)
+summary(model)
+
+
+```
+
